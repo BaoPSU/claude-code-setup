@@ -131,6 +131,122 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ---
 
+## Starting Claude from the Terminal — Exactly What to Type
+
+Open your terminal, `cd` into your project folder, then run one of these. Copy-paste exactly.
+
+### Fresh session — just start Claude
+
+```bash
+claude
+```
+
+New conversation. No prior context. Claude reads your CLAUDE.md files and waits for your first message.
+
+---
+
+### Continue your last session
+
+```bash
+claude --continue
+```
+
+Picks up exactly where you left off — same conversation, same context. Use this when you closed the terminal and came back. **This is what you want 90% of the time.**
+
+---
+
+### Continue last session, no permission prompts
+
+```bash
+claude --continue --dangerously-skip-permissions
+```
+
+Same as above but Claude won't ask before running commands, editing files, or pushing to GitHub. Use this when you're in the middle of a task and don't want to click approve every 30 seconds.
+
+---
+
+### Pick a specific past session to resume
+
+```bash
+claude --resume
+```
+
+Shows you a numbered list of your recent sessions. Pick one to jump back into it. Use this when `--continue` grabbed the wrong session or you want to go back further.
+
+---
+
+### Resume a past session, no permission prompts
+
+```bash
+claude --resume --dangerously-skip-permissions
+```
+
+Same as above, prompts skipped.
+
+---
+
+### Start fresh with no permission prompts
+
+```bash
+claude --dangerously-skip-permissions
+```
+
+Brand new session, but Claude can do whatever it needs without asking. Good for when you're starting a new task you trust fully.
+
+---
+
+### One-shot — give Claude a task and let it run
+
+```bash
+claude --dangerously-skip-permissions -p "your task here"
+```
+
+Claude does the task and exits. No back-and-forth. Good for automated or repetitive tasks.
+
+```bash
+# Examples
+claude --dangerously-skip-permissions -p "compile ECE332_Exam1_cheatsheet.tex and push to GitHub"
+claude --dangerously-skip-permissions -p "run the tests and tell me what failed"
+```
+
+---
+
+### The commands at a glance
+
+| What you want | Type this |
+|---|---|
+| Start fresh | `claude` |
+| Continue last session | `claude --continue` |
+| Continue, no prompts | `claude --continue --dangerously-skip-permissions` |
+| Pick a past session | `claude --resume` |
+| Pick a past session, no prompts | `claude --resume --dangerously-skip-permissions` |
+| Fresh start, no prompts | `claude --dangerously-skip-permissions` |
+| One-shot task | `claude --dangerously-skip-permissions -p "do the thing"` |
+
+---
+
+### Set up shortcuts so you don't type all that every time
+
+Add these to your `~/.bashrc` or `~/.zshrc`:
+
+```bash
+alias cl="claude"
+alias clc="claude --continue"
+alias clcf="claude --continue --dangerously-skip-permissions"
+alias clr="claude --resume"
+alias clrf="claude --resume --dangerously-skip-permissions"
+```
+
+Then reload:
+
+```bash
+source ~/.bashrc   # or source ~/.zshrc
+```
+
+Now `clcf` is all you need to type to jump back into your last session with no prompts.
+
+---
+
 ## Key Flags
 
 ### `--dangerously-skip-permissions`
