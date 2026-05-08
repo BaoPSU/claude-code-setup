@@ -17,7 +17,8 @@ Everything you need to get Claude Code running the right way — flags, tokens, 
 9. [Lecture Summaries in CLAUDE.md](#lecture-summaries)
 10. [LaTeX Cheat Sheets](#latex)
 11. [Recommended File Organization](#file-org)
-12. [Tips & Patterns](#tips)
+12. [Tone & Explanation Style in CLAUDE.md](#tone)
+13. [Tips & Patterns](#tips)
 
 ---
 
@@ -950,6 +951,75 @@ Each course is its own repo pushed to GitHub. Never mix courses in one repo — 
 *.toc
 # Keep PDFs committed — viewable on GitHub without local LaTeX install
 # *.pdf   ← intentionally excluded from gitignore
+```
+
+---
+
+## Tone & Explanation Style in CLAUDE.md
+
+You can tell Claude exactly how to explain things to you — and it will actually follow it. The most useful thing you can add to any CLAUDE.md is a plain-language instruction about how you want concepts broken down.
+
+### The line that actually works
+
+```markdown
+## How to explain things
+When I ask you to explain a concept, explain it like I'm a complete idiot.
+Short sentences. Real analogies. No textbook language.
+```
+
+This one line changes how Claude answers every question in that project. Instead of:
+
+> "The Poynting vector represents the directional energy flux density of an electromagnetic field, defined as the cross product of the electric and magnetic field vectors..."
+
+You get:
+
+> "It's basically which direction the wave is carrying energy and how much per square meter. Point your fingers along E, curl them toward H — your thumb points where the power goes."
+
+### More tone options to put in CLAUDE.md
+
+Pick the one that matches how your brain works:
+
+```markdown
+## Explanation style: ELI5
+Explain everything like I'm new to this topic. Start with the physical intuition
+before any math. Use one concrete example before showing the formula.
+
+## Explanation style: step-by-step only
+Never explain the theory unless I ask. When I give you a problem, 
+just walk me through the steps to solve it. Number each step.
+
+## Explanation style: compare to something I know
+I'm a circuits person. When explaining EM concepts, relate them back 
+to voltage, current, resistance, and impedance whenever possible.
+
+## Explanation style: bottom line first
+Give me the answer or the key takeaway in the first sentence.
+Explanation after. I'll ask if I want more detail.
+```
+
+### Stack them for different situations
+
+```markdown
+## Explanations
+- Default: plain english, short sentences, intuition before math
+- If I say "formal": give the textbook definition
+- If I say "just the steps": numbered steps only, skip all explanation
+- If I say "ELI5": pretend I've never seen this topic before
+```
+
+Now you can switch modes mid-session just by saying "formal" or "ELI5" without re-explaining your preferences every time.
+
+### Why this matters more than you think
+
+Claude defaults to a textbook voice — complete, precise, and utterly useless for actually learning something fast. A single line in CLAUDE.md flips that for every session in that project. You write it once and never have to say "can you explain that more simply" again.
+
+If you're using Claude for coursework, pair it with your lecture summaries:
+
+```markdown
+## Course style note
+I'm an EE student. Strong on circuits and math, weaker on field theory intuition.
+When explaining EM: circuits analogies first, field theory second.
+When I ask "what does X mean physically" — give me the gut-check version, not the definition.
 ```
 
 ---
