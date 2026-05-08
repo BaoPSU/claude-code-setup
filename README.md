@@ -1033,6 +1033,188 @@ This + detailed lecture summaries in the same CLAUDE.md = Claude that actually h
 
 ---
 
+## Using Claude as a TA
+
+The worst way to use Claude for coursework is "just give me the answer." You learn nothing, and when the exam comes you're cooked. The best way is to treat it like a TA that has infinite patience, has read every textbook and lecture, and will never make you feel dumb for asking the same question five different ways.
+
+Here's the full workflow that actually works.
+
+---
+
+### Step 1 — Build a HW cheat sheet before you start the homework
+
+Before touching a single problem, have Claude pull every equation and concept the homework will need from your lectures and textbook. This becomes `ECE332_HW1_cheatsheet.tex` — a reference sheet scoped to exactly that assignment.
+
+```
+I'm starting HW1 for ECE332. The topics are Faraday's Law, EMF, 
+and B fields from wires and toroids. 
+
+Look at lecture01.pdf and lecture02.pdf and pull out every equation, 
+definition, and formula that could show up on this homework. 
+Build me a LaTeX cheat sheet using the same format as ECE332_Exam1_cheatsheet.tex.
+One section per topic. Include a "when to use this" note next to each equation.
+```
+
+Claude reads your actual lecture slides, not generic internet knowledge. Every equation it pulls is one your professor actually taught — which means it's one that will actually be on the exam.
+
+---
+
+### Step 2 — Work through problems with it, don't just get answers
+
+When you're stuck on a problem, don't say "solve this." Say "help me figure out where to start."
+
+```
+HW1 Problem 3: A rectangular loop sits next to an infinite wire carrying 
+I(t) = 5cos(1000t) A. Find the induced EMF.
+
+I know I need Faraday's law but I don't know which form to use. 
+What's the first thing I should figure out?
+```
+
+Claude will ask you back: is the loop moving or stationary? Is B changing or is the loop moving through a static field? These are the actual questions you need to answer to pick the right equation — and working through them is what makes it stick.
+
+**If you're really lost, just say so:**
+
+```
+I have no idea where to even start with this problem. 
+Can you ask me questions to help me figure it out instead of just solving it?
+```
+
+This forces the back-and-forth that actually builds understanding. A real TA doesn't just write the answer on the board — they ask "okay what do you know so far?"
+
+---
+
+### Step 3 — When something doesn't click, ask for it a different way
+
+Claude will never get impatient. Every time something doesn't make sense, ask for a new angle:
+
+```
+I still don't get why the sign of the EMF matters. 
+Can you explain it a different way?
+```
+
+```
+Can you give me a physical intuition for this instead of the math?
+```
+
+```
+Can you walk me through a super simple example, like the simplest 
+possible version of this problem, before we do the real one?
+```
+
+```
+Why does adding more turns to the coil increase the EMF? 
+Like physically, what's actually happening?
+```
+
+None of these are dumb questions. These are exactly the questions you should be asking. The difference between a student who gets it and one who doesn't is usually just that the first one asked "why" three more times.
+
+---
+
+### The quality test for a good cheat sheet
+
+**You know the cheat sheet is done when you can complete the entire homework using only the cheat sheet — no textbook, no lecture slides, no Google.**
+
+If you hit a problem and have to go look something up, that thing belongs on the cheat sheet. Add it, then close the tab. By the time you've finished the homework, the cheat sheet contains literally everything you needed. That's exactly what you want going into the exam.
+
+```
+I finished HW2. I had to look up [the skin depth formula for good conductors] 
+mid-homework — it wasn't on my cheat sheet. Add it to ECE332_HW2_cheatsheet.tex 
+with a "when to use" note.
+```
+
+Do this every time you look something up. The cheat sheet self-corrects as you work.
+
+---
+
+### Step 4 — Update the HW cheat sheet as you go
+
+Every time you figure something out — a trick, a pattern, a "oh that's what that means" moment — add it to the HW cheat sheet:
+
+```
+Add a note to the EMF section: "if the loop is stationary and B is changing, 
+use transformer EMF. If B is static and the loop is moving, use motional EMF. 
+If both — use the full flux form, it always works."
+```
+
+These notes are yours. They're written in your words, based on your confusion, and they'll make more sense to you on the exam than anything in the textbook.
+
+---
+
+### Step 5 — Combine HW cheat sheets into the exam cheat sheet
+
+Before each midterm or final, merge all the individual HW cheat sheets into one. Claude handles this automatically:
+
+```
+I have ECE332_HW1_cheatsheet.tex and ECE332_HW2_cheatsheet.tex.
+Combine them into ECE332_Exam1_cheatsheet.tex using the same format.
+Midterm 1 covers lectures 1-10 and both homeworks.
+
+Rules:
+- Remove duplicate equations (keep the one with the better "when to use" note)
+- If HW1 and HW2 have overlapping topics, merge them into one section
+- Add a bottom reference strip with key variables and constants
+- Must compile to exactly 2 pages (front and back of one sheet)
+```
+
+The result is a cheat sheet that was built from your actual confusion — every equation in it is one that came up on real homework problems you actually struggled with.
+
+---
+
+### CLAUDE.md additions for the TA workflow
+
+Add this to your course CLAUDE.md:
+
+```markdown
+## TA mode
+When I'm working on homework, don't just solve problems for me.
+Ask me questions to help me figure out the right approach first.
+If I'm completely lost, walk me through it step by step — but ask me
+to confirm each step before moving to the next one.
+
+## HW cheat sheet workflow
+For each homework assignment:
+1. Before I start: pull equations from the relevant lecture PDFs into a new HW cheat sheet
+2. While I work: update the cheat sheet with tricks and notes I figure out
+3. After I finish: clean up the cheat sheet so it's exam-ready
+
+## Exam cheat sheet workflow
+Before each exam: merge all HW cheat sheets for the covered topics.
+Remove duplicates, merge overlapping sections, add reference strip.
+Must fit on one physical sheet (2 PDF pages).
+
+## How to explain things
+Explain things like I'm an idiot. If I don't get it, try a different angle.
+Never make me feel bad for asking the same question multiple times.
+Physical intuition before math. Simple example before the general case.
+```
+
+---
+
+### Questions that are always worth asking
+
+Real students ask these all the time. Don't be afraid of them:
+
+- *"What's the difference between X and Y and when do I use each one?"*
+- *"Can you show me the simplest possible example of this?"*
+- *"Why does this formula look like this? Where does it come from?"*
+- *"I got [wrong answer] — can you help me figure out where I went wrong without just solving it?"*
+- *"What's the most common mistake people make on this type of problem?"*
+- *"If I only have 30 seconds on the exam, what's the one thing I need to remember about this?"*
+- *"Can you quiz me on this topic?"*
+
+That last one is underused. Before an exam:
+
+```
+Quiz me on plane wave propagation. Ask me one question at a time, 
+wait for my answer, then tell me if I'm right and what I missed.
+Don't give me the next question until I've answered the current one.
+```
+
+This is literally how you study. You now have a TA available 24/7 who will do this forever without getting tired.
+
+---
+
 ## Tips & Patterns
 
 ### Minimal friction setup
