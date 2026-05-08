@@ -6,19 +6,107 @@ Everything you need to get Claude Code running the right way — flags, tokens, 
 
 ## Table of Contents
 
-1. [Install Claude Code](#install)
-2. [Key Flags](#key-flags)
-3. [GitHub Setup & Tokens](#github-setup)
-4. [CLAUDE.md Configuration](#claudemd)
-5. [Remote Control & Web Access](#remote-control)
-6. [Adding Images via Web](#images)
-7. [Saving Tokens with /compact](#compact)
-8. [Working with Repos — Don't Just Paste the URL](#repos-warning)
-9. [Lecture Summaries in CLAUDE.md](#lecture-summaries)
-10. [LaTeX Cheat Sheets](#latex)
-11. [Recommended File Organization](#file-org)
-12. [Tone & Explanation Style in CLAUDE.md](#tone)
-13. [Tips & Patterns](#tips)
+1. [How Claude Code Actually Works](#how-it-works)
+2. [Install Claude Code](#install)
+3. [Key Flags](#key-flags)
+4. [GitHub Setup & Tokens](#github-setup)
+5. [CLAUDE.md Configuration](#claudemd)
+6. [Remote Control & Web Access](#remote-control)
+7. [Adding Images via Web](#images)
+8. [Saving Tokens with /compact](#compact)
+9. [Working with Repos — Don't Just Paste the URL](#repos-warning)
+10. [Lecture Summaries in CLAUDE.md](#lecture-summaries)
+11. [LaTeX Cheat Sheets](#latex)
+12. [Recommended File Organization](#file-org)
+13. [Tone & Explanation Style in CLAUDE.md](#tone)
+14. [Using Claude as a TA](#ta)
+15. [Tips & Patterns](#tips)
+
+---
+
+## How Claude Code Actually Works
+
+Before anything else — understanding this makes every other section in this guide make sense.
+
+### The session model
+
+Every time you start Claude Code, it spins up a fresh session. It has no memory of your last conversation by default. It does not remember what files you edited yesterday, what you told it about your project, or what rules you set up. Every session starts blank.
+
+This sounds annoying. The fix is CLAUDE.md.
+
+### What fires at the start of every session
+
+The very first thing Claude does when you open a session is look for and read CLAUDE.md files. It reads them in this order:
+
+```
+1. ~/.claude/CLAUDE.md          ← your global rules (applies everywhere)
+2. ./CLAUDE.md                  ← project root (applies to this repo)
+3. ./src/CLAUDE.md              ← subfolder (applies when working in src/)
+```
+
+Each level adds to the one above. Subfolder rules stack on top of project rules, which stack on top of global rules. If there's a conflict, the closer one wins.
+
+**This means: anything you write in a CLAUDE.md file is automatically loaded into Claude's context before it reads a single message from you.** It's already "briefed" by the time you type your first word.
+
+### What this means practically
+
+Without CLAUDE.md, every session sounds like this:
+
+> "Hey Claude, I'm working on my ECE332 cheat sheet, it's a 6pt 3-column LaTeX file, only edit the Exam1 file not the HW ones, always compile from the src/ subfolder, the images are in img/..."
+
+With CLAUDE.md, Claude already knows all of that. You just say:
+
+> "Add a section on skin depth."
+
+And it does it correctly without you explaining the format, the file, the compile path, or anything else.
+
+### The CLAUDE.md is your persistent brain for Claude
+
+Think of it as a briefing document that gets handed to Claude at the start of every shift. A good CLAUDE.md answers:
+
+- What is this project?
+- What files are you allowed to touch?
+- What files must you never touch?
+- What format / style / rules apply?
+- What tools / commands do you use here?
+- How should you explain things to me?
+
+Everything in this guide — cheat sheet rules, TA mode, explanation style, file organization — gets wired in through CLAUDE.md. That's why it's the most important thing to set up correctly.
+
+### Memory across sessions
+
+Claude does not carry memory between sessions on its own. Your options:
+
+| Method | What it does |
+|--------|-------------|
+| `CLAUDE.md` | Permanent facts about the project — always loaded |
+| `--continue` | Resume the most recent session's conversation history |
+| `--resume` | Pick any past session to resume from |
+| `/compact` | Compress a long session to save tokens, keeps going |
+
+For anything you want Claude to know forever (project structure, rules, your explanation style), put it in CLAUDE.md. For anything you want it to remember just from earlier today, use `--continue`.
+
+### How reading order affects what Claude knows
+
+Claude reads files in context order — earlier context can be overridden by later context. This is why:
+
+- Global `~/.claude/CLAUDE.md` sets defaults
+- Project `./CLAUDE.md` overrides or extends them
+- Subfolder `./Notes/CLAUDE.md` overrides again for that specific folder
+
+So if your global CLAUDE.md says "always ask before running git push" but your project CLAUDE.md says "git push is allowed" — in that project, it's allowed. Closer always wins.
+
+### The session startup sequence, in order
+
+```
+1. Read ~/.claude/CLAUDE.md            (global rules)
+2. Read ./CLAUDE.md                    (project rules)
+3. Read any subfolder CLAUDE.md        (scoped rules)
+4. Read .claude/settings.json          (permissions)
+5. Now Claude reads your first message
+```
+
+By the time you type anything, Claude has already loaded your entire briefing. That's the whole trick. Write good CLAUDE.md files and you never have to re-explain yourself.
 
 ---
 
