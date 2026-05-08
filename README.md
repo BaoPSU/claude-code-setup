@@ -518,269 +518,438 @@ Then paste the output directly into CLAUDE.md under the right lecture heading.
 
 ## LaTeX Cheat Sheets
 
-Claude is excellent at writing and editing LaTeX. The key is telling it exactly what format you want — multi-column, tight margins, font size, section rules — so it produces something you can compile immediately without reformatting.
+The real template below is pulled directly from `ECE332-EMAG-II-Portland-State-University` — a working 6pt, 3-column, two-sided exam cheat sheet with colored section headers, framed content boxes, and a bottom reference strip. Use this as your base and adapt the colors and content per course.
 
-### Starter template — 2-column exam cheat sheet
+### Real working preamble (ECE332 EMAG II)
 
 ```latex
-\documentclass[8pt]{extarticle}
-\usepackage[margin=0.4in, columnsep=0.2in]{geometry}
-\usepackage{multicol, amsmath, amssymb, enumitem, graphicx, booktabs}
-\usepackage[compact]{titlesec}
-\titlespacing{\section}{0pt}{2pt}{1pt}
-\titlespacing{\subsection}{0pt}{1pt}{0pt}
-\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=*}
-\setlist[enumerate]{noitemsep, topsep=0pt, leftmargin=*}
+\documentclass[6pt,letterpaper]{article}
+\usepackage[margin=0.25in, top=0.3in, bottom=0.25in]{geometry}
+\usepackage{amsmath,amssymb,multicol,xcolor,mdframed}
+\usepackage[expansion=false]{microtype}   % required at sub-6pt — see microtype note below
+\usepackage{fancyhdr,booktabs,colortbl,array,graphicx}
 
+% ── Colors (bg + text pair for each topic) ──
+\definecolor{purple}{HTML}{534AB7}\definecolor{purplebg}{HTML}{EEEDFE}
+\definecolor{teal}{HTML}{0F6E56}\definecolor{tealbg}{HTML}{E1F5EE}
+\definecolor{coral}{HTML}{993C1D}\definecolor{coralbg}{HTML}{FAECE7}
+\definecolor{amber}{HTML}{854F0B}\definecolor{amberbg}{HTML}{FAEEDA}
+\definecolor{green}{HTML}{3B6D11}\definecolor{greenbg}{HTML}{EAF3DE}
+\definecolor{blue}{HTML}{0C447C}\definecolor{bluebg}{HTML}{E6F1FB}
+\definecolor{gray}{HTML}{444441}\definecolor{graybg}{HTML}{F1EFE8}
+\definecolor{pink}{HTML}{72243E}\definecolor{pinkbg}{HTML}{FBEAF0}
+\definecolor{rowB}{HTML}{F2F2EF}   % alternating table row tint
+
+% ── Content box (ebox) ──
+\newmdenv[linewidth=0.4pt,innerleftmargin=3pt,innerrightmargin=3pt,
+  innertopmargin=2pt,innerbottommargin=2pt,skipabove=1pt,skipbelow=1pt]{ebox}
+
+% ── Section header: \shead{bgcolor}{textcolor}{TITLE} ──
+\newcommand{\shead}[3]{%
+  \noindent\colorbox{#1}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}%
+  {\color{#2}\bfseries\fontsize{6}{7}\selectfont #3}}\vspace{0.5pt}}
+
+% ── Equation label: \eq{label}{when-to-use} ──
+\newcommand{\eq}[2]{\noindent{\color{gray}\bfseries\fontsize{5.8}{6}\selectfont#1}%
+  \enspace{\color{teal}\fontsize{5.5}{6}\selectfont\textit{#2}}}
+
+\setlength{\parindent}{0pt}\setlength{\parskip}{0pt}
+\setlength{\columnsep}{5pt}\setlength{\multicolsep}{1pt}
+
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancyhead[L]{\fontsize{6.5}{7}\selectfont\textbf{ECE332 --- Exam 1 Cheat Sheet}}
+\fancyhead[R]{\fontsize{6.5}{7}\selectfont Your Name}
+
+% images live in Midterm1/img/ — compile from src/ subfolder
+\graphicspath{{../img/}}
+```
+
+### Color scheme — assign one per topic
+
+Pick a color pair and use it consistently for the same topic across the whole sheet. This makes it scannable at a glance.
+
+| Color  | Background  | Text    | Use for                        |
+|--------|-------------|---------|--------------------------------|
+| purple | `purplebg`  | `purple`| Core laws, key definitions     |
+| teal   | `tealbg`    | `teal`  | Field relationships, tables    |
+| coral  | `coralbg`   | `coral` | Lossy media, warnings          |
+| amber  | `amberbg`   | `amber` | Rotating/circular, generators  |
+| green  | `greenbg`   | `green` | Power, Poynting, energy        |
+| blue   | `bluebg`    | `blue`  | Reference comparisons          |
+| gray   | `graybg`    | `gray`  | Quick-ref, step-by-step        |
+| pink   | `pinkbg`    | `pink`  | Phasor/complex math            |
+
+### Body layout — 3-column with bottom reference strip
+
+```latex
 \begin{document}
-\begin{multicols}{2}
+\fontsize{6}{7.5}\selectfont
+\setlength{\abovedisplayskip}{1pt}\setlength{\belowdisplayskip}{1.5pt}
+\setlength{\abovedisplayshortskip}{0pt}\setlength{\belowdisplayshortskip}{0pt}
 
-\section*{Topic 1}
-Key formula: $V = IR$
+\begin{multicols}{3}
 
-\subsection*{Sub-topic}
-\begin{itemize}
-  \item Point one
-  \item Point two
-\end{itemize}
+\shead{purplebg}{purple}{SECTION TITLE}
+\begin{ebox}
+\eq{Formula name}{when to use this}
+\[V_\text{emf} = -\frac{d\Phi}{dt}\]
+\textit{short note on the equation}
+\end{ebox}
 
-\columnbreak
-
-\section*{Topic 2}
+\vspace{2pt}
+\shead{tealbg}{teal}{NEXT SECTION}
+\begin{ebox}
 ...
+\end{ebox}
 
+\columnbreak   % ← force column break here; use 2 per page for 3-col layout
+
+\end{multicols}
+
+% ── Bottom reference strip: 5 equal minipages ──
+\vfill
+\noindent
+\begin{minipage}[t]{0.19\linewidth}
+\shead{purplebg}{purple}{VARIABLES}
+\begin{ebox}
+$\mathbf{E}$ — electric field (V/m)\\
+$\mathbf{B}$ — mag flux density (T)\\
+...
+\end{ebox}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.19\linewidth}
+\shead{tealbg}{teal}{CONSTANTS}
+\begin{ebox}
+$\varepsilon_0=8.85\times10^{-12}$ F/m\\
+$\mu_0=4\pi\times10^{-7}$ H/m\\
+$c=3\times10^8$ m/s\\
+...
+\end{ebox}
+\end{minipage}\hfill
+% ... repeat for columns 3–5
+
+\newpage
+% PAGE 2 — tighter spacing for dense material
+\fontsize{6}{7}\selectfont
+\setlength{\abovedisplayskip}{0pt}\setlength{\belowdisplayskip}{0.5pt}
+\begin{multicols}{3}
+...
 \end{multicols}
 \end{document}
 ```
 
-Compile with:
+### Table pattern — required to prevent rowcolor bleed
 
-```bash
-pdflatex cheatsheet.tex
-```
-
-### Prompting Claude to build or edit a cheat sheet
-
-**Be specific about which file:**
-
-```
-Edit ECE332_Exam1_cheatsheet.tex — add a section on Thevenin equivalents 
-after the KVL/KCL section. Two or three key formulas and a bullet list 
-of the steps. Keep the same 8pt two-column format.
-```
-
-**Don't say "update my cheat sheet" without a path** — if you have multiple `.tex` files Claude will guess, and it may edit the wrong one.
-
-**Useful instructions to include in CLAUDE.md:**
-
-```markdown
-## Cheat sheet rules
-- Only edit ECE332_Exam1_cheatsheet.tex unless told otherwise
-- Leave HW and lecture .tex files alone
-- Keep font 8pt, two-column, margins 0.4in
-- Use \subsection* not bold text for sub-headers
-- Never add \newpage — flow must fit two sides of one sheet
-- After edits, remind me to run: pdflatex ECE332_Exam1_cheatsheet.tex
-```
-
-### Keeping sections tight
-
-Claude tends to be verbose in LaTeX. Tell it the constraint upfront:
-
-```
-Add the Z-transform properties table. It must fit in under 15 lines of LaTeX — 
-use a compact tabular, no extra whitespace. Cheat sheet space is tight.
-```
-
-### Including images on a cheat sheet
-
-Host the image somewhere (GitHub raw URL or local path) and include it:
+Every table with `\rowcolor` rows **must** use this exact wrapper. Without `\makebox`, the colored row fill bleeds to the full column width.
 
 ```latex
-\includegraphics[width=\linewidth]{images/bode_plot.png}
+{\centering\makebox[0.98\linewidth][c]{{\setlength{\tabcolsep}{2pt}\begin{tabular}{@{}p{0.28\linewidth}p{0.66\linewidth}@{}}
+\toprule
+Header A & Header B\\
+\midrule
+\rowcolor{rowB}Row 1 col A & Row 1 col B\\
+Row 2 col A & Row 2 col B\\
+\bottomrule
+\end{tabular}}}\par}
 ```
 
-Or scaled down:
+Rules:
+- `\makebox[0.98\linewidth][c]` — constrains rowcolor fill to table width
+- `\setlength{\tabcolsep}{2pt}` — reduces padding so `p{}` columns fit
+- `@{}` at both ends of column spec — removes leading/trailing padding
+- `p{}` column widths must sum to ≈ 0.95\linewidth or less
+
+For auto-sized columns (`c`, `l`, `r`) the `\setlength` wrapper is optional.
+
+### Images inside an ebox
+
+Place images in an `img/` subfolder next to the cheatsheet folder, not inside `src/`. The `\graphicspath{{../img/}}` in the preamble handles the path so you just use the filename:
 
 ```latex
-\includegraphics[width=0.48\linewidth]{images/circuit_diagram.png}
+\begin{ebox}
+{\centering\includegraphics[width=0.90\linewidth,keepaspectratio]{coaxial_fig.png}\par}
+\textit{Caption or annotation here}
+\end{ebox}
 ```
 
-Tell Claude:
+For a full-width diagram: `width=\linewidth`. For a smaller inset: `width=0.55\linewidth`.
 
-```
-Add this circuit diagram to the Thevenin section: images/thevenin_example.png
-Scale it to 0.45\linewidth so it doesn't take up too much space.
+### Spacing knobs — tight vs. readable
+
+```latex
+% Ultra-tight (page 2, dense content)
+\fontsize{6}{7}\selectfont
+\setlength{\abovedisplayskip}{0pt}\setlength{\belowdisplayskip}{0.5pt}
+% innertopmargin=0.5pt, innerbottommargin=0.5pt in \newmdenv
+
+% Readable (page 1, more breathing room)
+\fontsize{6}{7.5}\selectfont
+\setlength{\abovedisplayskip}{1pt}\setlength{\belowdisplayskip}{1.5pt}
+% innertopmargin=2pt, innerbottommargin=2pt in \newmdenv
 ```
 
-### Compile workflow with Claude
+You can switch mid-document with `\setlength` after `\newpage`.
+
+### microtype fix for sub-6pt fonts
+
+If you get `pdfTeX error: auto expansion is only possible with scalable fonts`, add:
+
+```latex
+\usepackage[expansion=false]{microtype}
+```
+
+This hits when `\eq{}{}` renders labels at 5.5pt and bitmap fonts kick in. `expansion=false` fixes it with no visible quality loss.
+
+### Page length — if it overflows, fix in this order
+
+1. Remove or shorten a section
+2. Reduce `\vspace{}` between boxes (try `0.3pt`)
+3. Tighten ebox margins (`innertopmargin`, `innerbottommargin`)
+4. Condense multi-line items to one line
+
+Do not just shrink the font below 6pt — it becomes unreadable under exam conditions.
+
+### Full workflow: download → edit → compile → push via API
+
+Because Claude works in `/tmp` and that gets cleared between sessions, always fetch the file fresh from GitHub at the start of a session, then push back via the API (the file is too large to pass as a CLI arg).
 
 ```bash
-# Let Claude build the PDF too
-claude --dangerously-skip-permissions "compile ECE332_Exam1_cheatsheet.tex and open the PDF"
+# 1. Download .tex from GitHub
+gh api repos/BaoPSU/ECE332-EMAG-II-Portland-State-University/contents/Notes/Cheatsheets/Midterm1/src/ECE332_Exam1_cheatsheet.tex \
+  --jq '.content' | base64 -d > /tmp/ECE332_Exam1_cheatsheet.tex
+
+# 2. Edit the file (Claude uses the Edit tool on /tmp/ECE332_Exam1_cheatsheet.tex)
+
+# 3. Compile — MUST run from /tmp so \graphicspath resolves correctly
+#    (or copy img/ folder to /tmp first if images are needed)
+cd /tmp && pdflatex -interaction=nonstopmode ECE332_Exam1_cheatsheet.tex
+# Check: "Output written on ... (2 pages)" — must be exactly 2 pages (front+back)
+
+# 4. Push PDF via API (too large for CLI arg, must base64-encode)
+SHA=$(gh api repos/BaoPSU/ECE332-EMAG-II-Portland-State-University/contents/Notes/Cheatsheets/Midterm1/ECE332_Exam1_cheatsheet.pdf --jq '.sha')
+base64 -w 0 /tmp/ECE332_Exam1_cheatsheet.pdf > /tmp/pdf_b64.txt
+python3 -c "
+import json
+with open('/tmp/pdf_b64.txt') as f: content = f.read().strip()
+json.dump({'message': 'update Exam1 cheat sheet', 'content': content, 'sha': '$SHA'}, open('/tmp/payload.json','w'))
+"
+gh api --method PUT repos/BaoPSU/ECE332-EMAG-II-Portland-State-University/contents/Notes/Cheatsheets/Midterm1/ECE332_Exam1_cheatsheet.pdf \
+  --input /tmp/payload.json --jq '.commit.sha'
+
+# 5. Push .tex the same way
+SHA2=$(gh api repos/BaoPSU/ECE332-EMAG-II-Portland-State-University/contents/Notes/Cheatsheets/Midterm1/src/ECE332_Exam1_cheatsheet.tex --jq '.sha')
+python3 -c "
+import json, base64
+content = base64.b64encode(open('/tmp/ECE332_Exam1_cheatsheet.tex','rb').read()).decode()
+json.dump({'message': 'update Exam1 cheat sheet', 'content': content, 'sha': '$SHA2'}, open('/tmp/payload_tex.json','w'))
+"
+gh api --method PUT repos/BaoPSU/ECE332-EMAG-II-Portland-State-University/contents/Notes/Cheatsheets/Midterm1/src/ECE332_Exam1_cheatsheet.tex \
+  --input /tmp/payload_tex.json --jq '.commit.sha'
 ```
 
-Or in CLAUDE.md:
+Put the full workflow in CLAUDE.md so Claude always follows it without being told.
 
-```markdown
-## Build command
-pdflatex -interaction=nonstopmode cheatsheets/ECE332_Exam1_cheatsheet.tex
+### Prompting Claude to edit a cheat sheet
+
+Always name the exact file and state the constraint:
+
 ```
+Download ECE332_Exam1_cheatsheet.tex from GitHub, add a section on skin depth 
+after the lossy media section. Use \shead{coralbg}{coral}{SKIN DEPTH}. 
+Two equations: general form and good-conductor approximation. Keep it under 
+8 lines of LaTeX. Must still compile to 2 pages.
+```
+
+Never say "update my cheat sheet" without a path or Claude will guess — and with multiple `.tex` files it will guess wrong.
 
 ---
 
 ## Recommended File Organization
 
-A structure that works for coursework, keeps Claude from reading the wrong files, and scales across multiple classes and semesters.
+This structure is taken directly from `BaoPSU/ECE332-EMAG-II-Portland-State-University` — use it as your template for any STEM course repo.
 
-### Top-level layout
-
-```
-~/school/
-├── ECE332/
-├── ECE410/
-├── ECE424/
-└── shared/
-    ├── latex-templates/
-    └── images/
-```
-
-### Per-course layout
+### Actual ECE332 repo layout
 
 ```
-ECE332/
-├── CLAUDE.md                        ← Claude's instructions for this course
-├── .claude/
-│   └── settings.json                ← permissions for this project
+ECE332-EMAG-II-Portland-State-University/
 │
-├── cheatsheets/
-│   ├── Exam1_cheatsheet.tex         ← compiled for Exam 1
-│   ├── Exam1_cheatsheet.pdf
-│   ├── Exam2_cheatsheet.tex
-│   └── Exam2_cheatsheet.pdf
-│
-├── homework/
-│   ├── HW1/
-│   │   ├── HW1.tex
-│   │   ├── HW1.pdf
-│   │   └── images/
-│   ├── HW2/
+├── Notes/
+│   ├── CLAUDE.md                        ← Claude's instructions (lives here, not root)
+│   │
+│   ├── Cheatsheets/
+│   │   ├── Midterm1/
+│   │   │   ├── ECE332_Exam1_cheatsheet.pdf   ← compiled PDF (viewable on GitHub)
+│   │   │   ├── ECE332_HW1_cheatsheet.pdf
+│   │   │   ├── ECE332_HW2_cheatsheet.pdf
+│   │   │   ├── img/                          ← images referenced by .tex files
+│   │   │   │   ├── coaxial_fig.png
+│   │   │   │   ├── pol_ellipse.jpg
+│   │   │   │   ├── UnitCircle.jpg
+│   │   │   │   └── conductor_3d.png
+│   │   │   └── src/                          ← .tex source files live here
+│   │   │       ├── ECE332_Exam1_cheatsheet.tex
+│   │   │       ├── ECE332_HW1_cheatsheet.tex
+│   │   │       └── ECE332_HW2_cheatsheet.tex
+│   │   └── Final/
+│   │       └── src/                          ← drop final cheat sheet .tex here
+│   │
+│   ├── lecture01.pdf                    ← original lecture slide PDFs
+│   ├── lecture02.pdf
 │   └── ...
 │
-├── lectures/
-│   ├── L01_intro.md                 ← Claude-generated summary
-│   ├── L02_KVL_KCL.md
-│   ├── L03_thevenin.md
-│   └── slides/                      ← original PDFs if you keep them
-│       ├── L01.pdf
-│       └── L02.pdf
+├── Homework/
+│   ├── HW1/
+│   │   ├── HW1_Generate.tex             ← HW writeup source
+│   │   ├── HW1_Generate.pdf
+│   │   ├── hw1.pdf                      ← blank assignment
+│   │   ├── hw1solns.pdf                 ← solutions
+│   │   └── cs_crops/                    ← cropped screenshots from the cheat sheet
+│   │       ├── cs_bfields.png           ← used as image references in answers
+│   │       ├── cs_emf.png
+│   │       └── ...
+│   └── HW2/
+│       ├── HW2.pdf
+│       ├── HW2_solutions.pdf
+│       ├── HW2_P3a.png                  ← plot generated by Python script
+│       └── HW2_P3a.py
 │
-├── exams/
-│   ├── Exam1_practice.pdf
-│   └── Exam1_solutions.md           ← worked solutions Claude helped write
+├── Exams/
+│   ├── ECE332_Exam1_Fall2025.pdf        ← blank exam
+│   ├── ECE332_Exam1_Fall2025_AnswerKey.pdf
+│   └── src/
+│       ├── ECE332_Exam1_Fall2025.tex
+│       └── ECE332_Exam1_Fall2025_AnswerKey.tex
 │
-└── notes/
-    └── concepts.md                  ← running doc of things that confused you
+├── Labs/
+│   ├── ECE332 Lab Report Template.docx
+│   ├── Lab 1/ECE332_Lab1_Signal_Integrity.pdf
+│   ├── Lab 2/ECE332_Lab2_WirelessPower.pdf
+│   └── Lab 3/ECE332_Lab3_Waveguides_Official.pdf
+│
+├── README.md
+└── syllabus.pdf
 ```
 
-### CLAUDE.md for a course
+### Key structural rules
+
+**PDFs go in the folder, source goes in `src/`**  
+Compiled PDFs are viewable directly on GitHub. Keeping `.tex` in `src/` prevents clutter and makes clear which files Claude should edit.
+
+**Images go in `img/` next to `src/`**  
+The preamble uses `\graphicspath{{../img/}}` so the `.tex` in `src/` finds images one level up. Always compile from `src/` — compiling from `/tmp` without copying `img/` will silently drop all figures.
+
+**CLAUDE.md goes in `Notes/`**  
+This scopes Claude's instructions to the notes/cheatsheets work. Claude reads the CLAUDE.md closest to where it's working. Putting it at the repo root makes it apply to homework and labs too, which you usually don't want.
+
+**`cs_crops/` inside each HW folder**  
+When an HW answer references a formula from the cheat sheet, crop that section as a PNG and save it here. Embed it in the HW `.tex` as a figure instead of re-typesetting the formula — faster and consistent with the cheat sheet.
+
+### CLAUDE.md for the Notes folder (real ECE332 version)
 
 ```markdown
-# Course: ECE 332 — Circuits II
+# ECE332 Cheat Sheet — Claude Setup Guide
+
+## Folder structure
+Notes/Cheatsheets/
+├── Midterm1/
+│   ├── *.pdf          ← compiled output
+│   ├── img/           ← images for the cheat sheet
+│   └── src/*.tex      ← source files (edit these)
+└── Final/
+    └── src/
+
+Always compile from the src/ subfolder — images use \graphicspath{{../../}}
+which resolves to Notes/. Compiling from /tmp will silently drop figures.
+
+## Workflow
+1. Download the .tex from GitHub via gh api ... | base64 -d > /tmp/<file>.tex
+2. Edit /tmp/<file>.tex
+3. Compile: cd /tmp && pdflatex -interaction=nonstopmode <file>.tex
+   Check: output must stay on exactly N pages
+4. Push PDF and .tex back to GitHub via gh api --method PUT (base64-encoded)
+
+## Layout
+- \documentclass[6pt,letterpaper]{article}, margins 0.25in
+- 3-column multicols body + 5-box minipage strip at bottom
+- \columnbreak after col 1 and col 2
+
+## Color scheme (bg, text)
+purple=core laws | teal=field relations | coral=lossy/warnings
+amber=rotating/circular | green=power/Poynting | blue=comparisons
+gray=quick-ref | pink=phasors
+
+## Table pattern (prevents rowcolor bleed)
+{\centering\makebox[0.98\linewidth][c]{{\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}...@{}}...\end{tabular}}}\par}
+
+## ebox environment
+\newmdenv[linewidth=0.4pt,innerleftmargin=3pt,innerrightmargin=3pt,
+  innertopmargin=2pt,innerbottommargin=2pt,skipabove=1pt,skipbelow=1pt]{ebox}
+Inner \linewidth inside ebox ≈ 182.7 pt (col width 188.7 pt minus 6 pt margins)
+
+## Page length control — if it overflows, fix in this order
+1. Remove or shorten a section
+2. Reduce \vspace{} between boxes (try 0.3pt)
+3. Tighten ebox margins (innertopmargin/innerbottommargin)
+4. Condense multi-line items to one line
+
+## Known harmless warnings
+Two Overfull \hbox warnings at lines ~223 and ~241 (lossy media section) — expected, ignore.
 
 ## Files Claude is allowed to edit
-- cheatsheets/Exam1_cheatsheet.tex
-- cheatsheets/Exam2_cheatsheet.tex
-- lectures/*.md
-- notes/concepts.md
+- Notes/Cheatsheets/Midterm1/src/ECE332_Exam1_cheatsheet.tex
+- Notes/Cheatsheets/Final/src/*.tex (when created)
 
-## Files Claude must NOT edit without explicit instruction
-- homework/**  ← ask before changing any HW file
-- exams/**     ← never touch
-
-## Cheat sheet rules
-- Font: 8pt, two-column, margins 0.4in
-- Only edit the cheatsheet named in the request
-- Leave all other .tex files alone
-- After any edit: pdflatex cheatsheets/<filename>.tex
-
-## Lecture summary format
-Each lectures/*.md file follows this structure:
-- Key concepts (one line)
-- Summary (2-3 paragraphs, real detail not just topic names)
-- Key formulas in LaTeX notation
-- Images (raw GitHub URL or relative path)
-- My notes (non-obvious insight)
-
-## Build commands
-- Compile cheatsheet: pdflatex -interaction=nonstopmode cheatsheets/<file>.tex
-- View PDF: evince <file>.pdf (Linux) or open <file>.pdf (Mac)
-```
-
-### Shared templates folder
-
-Keep reusable LaTeX boilerplate in `~/school/shared/latex-templates/`:
-
-```
-shared/
-└── latex-templates/
-    ├── cheatsheet_2col.tex     ← base two-column exam cheat sheet
-    ├── cheatsheet_3col.tex     ← three-column for dense material
-    ├── homework.tex            ← standard HW template with course header
-    └── report.tex              ← lab/project report template
-```
-
-In your global `~/.claude/CLAUDE.md`:
-
-```markdown
-## LaTeX templates
-Reusable templates are in ~/school/shared/latex-templates/
-When starting a new cheat sheet or HW, copy the appropriate template first.
-Never edit the templates directly — copy then edit.
+## Files Claude must NOT touch
+- Homework/** — ask before changing any HW file
+- Exams/**    — never edit exam source without explicit instruction
+- Any file not in Notes/Cheatsheets/
 ```
 
 ### Naming conventions
 
-Consistent names mean Claude (and you) always know what's what:
-
 | Type | Pattern | Example |
 |------|---------|---------|
-| Cheat sheet | `ExamN_cheatsheet.tex` | `Exam1_cheatsheet.tex` |
-| Homework | `HWN/HWN.tex` | `HW3/HW3.tex` |
-| Lecture notes | `LNN_topic.md` | `L04_bode_plots.md` |
-| Practice exam | `ExamN_practice.pdf` | `Exam2_practice.pdf` |
-| Solutions | `ExamN_solutions.md` | `Exam2_solutions.md` |
+| Exam cheat sheet | `CourseCode_ExamN_cheatsheet.tex` | `ECE332_Exam1_cheatsheet.tex` |
+| HW cheat sheet | `CourseCode_HWN_cheatsheet.tex` | `ECE332_HW2_cheatsheet.tex` |
+| Exam paper | `CourseCode_ExamN_Term.tex` | `ECE332_Exam1_Fall2025.tex` |
+| Answer key | `..._AnswerKey.tex` | `ECE332_Exam1_Fall2025_AnswerKey.tex` |
+| HW folder | `HWN/` | `HW3/` |
+| HW writeup | `HWN_Generate.tex` | `HW1_Generate.tex` |
+| Lecture slide | `lectureNN.pdf` | `lecture05.pdf` |
+| CS crop | `cs_<topic>.png` | `cs_bfields.png` |
 
-Zero ambiguity about what each file is. Claude won't ask and won't guess.
+Zero ambiguity. Claude won't ask which file you mean and won't touch the wrong one.
 
-### Git for coursework
+### Top-level layout across courses
 
-Track everything except compiled PDFs and build artifacts:
+```
+~/school/
+├── ECE332-EMAG-II/          ← one git repo per course
+├── ECE410-ML-Hardware/
+├── ECE424-Prof-Practice/
+└── shared/
+    └── latex-templates/
+        ├── cheatsheet_3col.tex   ← the ECE332 preamble stripped of content
+        ├── homework.tex
+        └── lab_report.tex
+```
 
-```bash
-# .gitignore for a course repo
+Each course is its own repo pushed to GitHub. Never mix courses in one repo — it makes the CLAUDE.md too generic and Claude ends up with permission to edit everything.
+
+### .gitignore for LaTeX course repos
+
+```gitignore
 *.aux
 *.log
 *.out
 *.synctex.gz
 *.fls
 *.fdb_latexmk
-# Keep PDFs — useful to see compiled output in GitHub
-# *.pdf  ← leave this commented out
-```
-
-Push to GitHub so you have backups and can view PDFs in the browser:
-
-```bash
-cd ~/school/ECE332
-git init
-gh repo create ECE332 --private --source=. --push
-```
-
-Then Claude can commit and push after building:
-
-```
-compile Exam1_cheatsheet.tex, then commit and push with message "update Exam1 cheat sheet"
+*.toc
+# Keep PDFs committed — viewable on GitHub without local LaTeX install
+# *.pdf   ← intentionally excluded from gitignore
 ```
 
 ---
