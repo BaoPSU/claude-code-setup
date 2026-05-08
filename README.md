@@ -163,6 +163,8 @@ claude --continue --dangerously-skip-permissions
 
 Same as above but Claude won't ask before running commands, editing files, or pushing to GitHub. Use this when you're in the middle of a task and don't want to click approve every 30 seconds.
 
+> **Heads up:** `--dangerously-skip-permissions` gives Claude full access to your entire computer — not just the project folder. Files, hardware, system processes, network, everything. Only use it when you know what the task is going to do. See the [Key Flags](#key-flags) section for the full warning.
+
 ---
 
 ### Pick a specific past session to resume
@@ -263,7 +265,15 @@ claude --dangerously-skip-permissions
 claude --dangerously-skip-permissions "fix all lint errors and commit"
 ```
 
-> **Warning:** This gives Claude full autonomy. Only use on repos you control and when you understand what the task will do.
+> **WARNING — this flag gives Claude full access to your entire computer.**
+>
+> Not just the current folder. Not just git. **Everything.** File system, hardware, network, system processes, USB devices, the works. Claude can read any file on your machine, execute any command, install software, modify system configs, and access any connected hardware. It's the equivalent of handing someone your keyboard with root access and walking out of the room.
+>
+> That's why it's called *dangerously* skip permissions — the name is not a joke.
+>
+> **Use it when:** You trust the task, you're in your own project folder, and you understand what Claude is about to do.
+>
+> **Don't use it when:** You're running someone else's CLAUDE.md, you're in a sensitive directory, or you're not sure what the task involves. The permission prompts exist for a reason — they're a checkpoint to catch things you didn't mean to happen.
 
 ---
 
