@@ -1061,26 +1061,89 @@ Claude reads your actual lecture slides, not generic internet knowledge. Every e
 
 ### Step 2 — Work through problems with it, don't just get answers
 
-When you're stuck on a problem, don't say "solve this." Say "help me figure out where to start."
+When you're stuck on a problem, don't say "solve this." Say "guide me through it step by step."
 
 ```
 HW1 Problem 3: A rectangular loop sits next to an infinite wire carrying 
 I(t) = 5cos(1000t) A. Find the induced EMF.
 
-I know I need Faraday's law but I don't know which form to use. 
-What's the first thing I should figure out?
+Don't solve it. Walk me through it one step at a time — give me the first 
+thing I need to figure out, wait for my answer, then give me the next step.
 ```
 
-Claude will ask you back: is the loop moving or stationary? Is B changing or is the loop moving through a static field? These are the actual questions you need to answer to pick the right equation — and working through them is what makes it stick.
+Claude will stop after each step and wait for you to respond. It might ask: is the loop moving or stationary? Once you answer, it gives you the next question. This is exactly how a good TA runs office hours — they don't solve it for you, they ask you questions until you solve it yourself.
 
-**If you're really lost, just say so:**
+**Structure to ask for explicitly:**
 
 ```
-I have no idea where to even start with this problem. 
-Can you ask me questions to help me figure it out instead of just solving it?
+Guide me through this problem step by step. After each step, 
+wait for me to answer before continuing. If I'm wrong, 
+tell me what I got wrong and ask me to try again — don't just 
+give me the right answer.
+```
+
+**If you're completely lost:**
+
+```
+I have no idea where to even start. What's the very first 
+question I need to ask myself when I see a problem like this?
 ```
 
 This forces the back-and-forth that actually builds understanding. A real TA doesn't just write the answer on the board — they ask "okay what do you know so far?"
+
+---
+
+### Generate similar practice problems from your homework
+
+Once you finish (or understand) a homework problem, use it as a template to generate more like it. This is how you actually get good at a problem type — not by doing it once, but by doing five variations until the pattern is automatic.
+
+```
+Here's HW1 Problem 3: [paste problem]
+
+Generate 3 similar problems with different numbers and slightly different 
+setups — change the loop geometry, the current waveform, the wire configuration.
+Don't solve them yet, just give me the problems.
+```
+
+Then work through each one step by step. When you're done:
+
+```
+Now show me the solutions and tell me where my reasoning was wrong.
+```
+
+**Variations to ask for:**
+
+```
+Make a harder version of this problem — add a second wire, or make the loop moving.
+```
+
+```
+Make an easier version first so I can see the pattern, then give me the original.
+```
+
+```
+Give me a version that tests the same concept but looks completely different 
+on the surface — I want to make sure I actually understand it and 
+didn't just memorize this specific setup.
+```
+
+That last one is the most important. Exams never look exactly like the homework. If you can only solve the problem when it looks familiar, you don't actually know it yet.
+
+**Before an exam, do this:**
+
+```
+I have Exam 1 coming up covering HW1 and HW2. 
+Generate a 5-problem practice exam using my HW problems as templates.
+Mix the topics. Make the problems exam-length, not homework-length.
+Don't tell me the answers yet.
+```
+
+Work through it. Then:
+
+```
+Grade my work. For each problem I got wrong, don't just show me the answer —
+tell me the specific step where my reasoning broke down.
+```
 
 ---
 
