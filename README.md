@@ -15,7 +15,9 @@ Everything you need to get Claude Code running the right way — flags, tokens, 
 7. [Saving Tokens with /compact](#compact)
 8. [Working with Repos — Don't Just Paste the URL](#repos-warning)
 9. [Lecture Summaries in CLAUDE.md](#lecture-summaries)
-10. [Tips & Patterns](#tips)
+10. [LaTeX Cheat Sheets](#latex)
+11. [Recommended File Organization](#file-org)
+12. [Tips & Patterns](#tips)
 
 ---
 
@@ -511,6 +513,275 @@ Include any diagrams as image references if I give you the file paths.
 ```
 
 Then paste the output directly into CLAUDE.md under the right lecture heading.
+
+---
+
+## LaTeX Cheat Sheets
+
+Claude is excellent at writing and editing LaTeX. The key is telling it exactly what format you want — multi-column, tight margins, font size, section rules — so it produces something you can compile immediately without reformatting.
+
+### Starter template — 2-column exam cheat sheet
+
+```latex
+\documentclass[8pt]{extarticle}
+\usepackage[margin=0.4in, columnsep=0.2in]{geometry}
+\usepackage{multicol, amsmath, amssymb, enumitem, graphicx, booktabs}
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{2pt}{1pt}
+\titlespacing{\subsection}{0pt}{1pt}{0pt}
+\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=*}
+\setlist[enumerate]{noitemsep, topsep=0pt, leftmargin=*}
+
+\begin{document}
+\begin{multicols}{2}
+
+\section*{Topic 1}
+Key formula: $V = IR$
+
+\subsection*{Sub-topic}
+\begin{itemize}
+  \item Point one
+  \item Point two
+\end{itemize}
+
+\columnbreak
+
+\section*{Topic 2}
+...
+
+\end{multicols}
+\end{document}
+```
+
+Compile with:
+
+```bash
+pdflatex cheatsheet.tex
+```
+
+### Prompting Claude to build or edit a cheat sheet
+
+**Be specific about which file:**
+
+```
+Edit ECE332_Exam1_cheatsheet.tex — add a section on Thevenin equivalents 
+after the KVL/KCL section. Two or three key formulas and a bullet list 
+of the steps. Keep the same 8pt two-column format.
+```
+
+**Don't say "update my cheat sheet" without a path** — if you have multiple `.tex` files Claude will guess, and it may edit the wrong one.
+
+**Useful instructions to include in CLAUDE.md:**
+
+```markdown
+## Cheat sheet rules
+- Only edit ECE332_Exam1_cheatsheet.tex unless told otherwise
+- Leave HW and lecture .tex files alone
+- Keep font 8pt, two-column, margins 0.4in
+- Use \subsection* not bold text for sub-headers
+- Never add \newpage — flow must fit two sides of one sheet
+- After edits, remind me to run: pdflatex ECE332_Exam1_cheatsheet.tex
+```
+
+### Keeping sections tight
+
+Claude tends to be verbose in LaTeX. Tell it the constraint upfront:
+
+```
+Add the Z-transform properties table. It must fit in under 15 lines of LaTeX — 
+use a compact tabular, no extra whitespace. Cheat sheet space is tight.
+```
+
+### Including images on a cheat sheet
+
+Host the image somewhere (GitHub raw URL or local path) and include it:
+
+```latex
+\includegraphics[width=\linewidth]{images/bode_plot.png}
+```
+
+Or scaled down:
+
+```latex
+\includegraphics[width=0.48\linewidth]{images/circuit_diagram.png}
+```
+
+Tell Claude:
+
+```
+Add this circuit diagram to the Thevenin section: images/thevenin_example.png
+Scale it to 0.45\linewidth so it doesn't take up too much space.
+```
+
+### Compile workflow with Claude
+
+```bash
+# Let Claude build the PDF too
+claude --dangerously-skip-permissions "compile ECE332_Exam1_cheatsheet.tex and open the PDF"
+```
+
+Or in CLAUDE.md:
+
+```markdown
+## Build command
+pdflatex -interaction=nonstopmode cheatsheets/ECE332_Exam1_cheatsheet.tex
+```
+
+---
+
+## Recommended File Organization
+
+A structure that works for coursework, keeps Claude from reading the wrong files, and scales across multiple classes and semesters.
+
+### Top-level layout
+
+```
+~/school/
+├── ECE332/
+├── ECE410/
+├── ECE424/
+└── shared/
+    ├── latex-templates/
+    └── images/
+```
+
+### Per-course layout
+
+```
+ECE332/
+├── CLAUDE.md                        ← Claude's instructions for this course
+├── .claude/
+│   └── settings.json                ← permissions for this project
+│
+├── cheatsheets/
+│   ├── Exam1_cheatsheet.tex         ← compiled for Exam 1
+│   ├── Exam1_cheatsheet.pdf
+│   ├── Exam2_cheatsheet.tex
+│   └── Exam2_cheatsheet.pdf
+│
+├── homework/
+│   ├── HW1/
+│   │   ├── HW1.tex
+│   │   ├── HW1.pdf
+│   │   └── images/
+│   ├── HW2/
+│   └── ...
+│
+├── lectures/
+│   ├── L01_intro.md                 ← Claude-generated summary
+│   ├── L02_KVL_KCL.md
+│   ├── L03_thevenin.md
+│   └── slides/                      ← original PDFs if you keep them
+│       ├── L01.pdf
+│       └── L02.pdf
+│
+├── exams/
+│   ├── Exam1_practice.pdf
+│   └── Exam1_solutions.md           ← worked solutions Claude helped write
+│
+└── notes/
+    └── concepts.md                  ← running doc of things that confused you
+```
+
+### CLAUDE.md for a course
+
+```markdown
+# Course: ECE 332 — Circuits II
+
+## Files Claude is allowed to edit
+- cheatsheets/Exam1_cheatsheet.tex
+- cheatsheets/Exam2_cheatsheet.tex
+- lectures/*.md
+- notes/concepts.md
+
+## Files Claude must NOT edit without explicit instruction
+- homework/**  ← ask before changing any HW file
+- exams/**     ← never touch
+
+## Cheat sheet rules
+- Font: 8pt, two-column, margins 0.4in
+- Only edit the cheatsheet named in the request
+- Leave all other .tex files alone
+- After any edit: pdflatex cheatsheets/<filename>.tex
+
+## Lecture summary format
+Each lectures/*.md file follows this structure:
+- Key concepts (one line)
+- Summary (2-3 paragraphs, real detail not just topic names)
+- Key formulas in LaTeX notation
+- Images (raw GitHub URL or relative path)
+- My notes (non-obvious insight)
+
+## Build commands
+- Compile cheatsheet: pdflatex -interaction=nonstopmode cheatsheets/<file>.tex
+- View PDF: evince <file>.pdf (Linux) or open <file>.pdf (Mac)
+```
+
+### Shared templates folder
+
+Keep reusable LaTeX boilerplate in `~/school/shared/latex-templates/`:
+
+```
+shared/
+└── latex-templates/
+    ├── cheatsheet_2col.tex     ← base two-column exam cheat sheet
+    ├── cheatsheet_3col.tex     ← three-column for dense material
+    ├── homework.tex            ← standard HW template with course header
+    └── report.tex              ← lab/project report template
+```
+
+In your global `~/.claude/CLAUDE.md`:
+
+```markdown
+## LaTeX templates
+Reusable templates are in ~/school/shared/latex-templates/
+When starting a new cheat sheet or HW, copy the appropriate template first.
+Never edit the templates directly — copy then edit.
+```
+
+### Naming conventions
+
+Consistent names mean Claude (and you) always know what's what:
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Cheat sheet | `ExamN_cheatsheet.tex` | `Exam1_cheatsheet.tex` |
+| Homework | `HWN/HWN.tex` | `HW3/HW3.tex` |
+| Lecture notes | `LNN_topic.md` | `L04_bode_plots.md` |
+| Practice exam | `ExamN_practice.pdf` | `Exam2_practice.pdf` |
+| Solutions | `ExamN_solutions.md` | `Exam2_solutions.md` |
+
+Zero ambiguity about what each file is. Claude won't ask and won't guess.
+
+### Git for coursework
+
+Track everything except compiled PDFs and build artifacts:
+
+```bash
+# .gitignore for a course repo
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+# Keep PDFs — useful to see compiled output in GitHub
+# *.pdf  ← leave this commented out
+```
+
+Push to GitHub so you have backups and can view PDFs in the browser:
+
+```bash
+cd ~/school/ECE332
+git init
+gh repo create ECE332 --private --source=. --push
+```
+
+Then Claude can commit and push after building:
+
+```
+compile Exam1_cheatsheet.tex, then commit and push with message "update Exam1 cheat sheet"
+```
 
 ---
 
