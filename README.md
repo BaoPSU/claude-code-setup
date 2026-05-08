@@ -957,70 +957,79 @@ Each course is its own repo pushed to GitHub. Never mix courses in one repo — 
 
 ## Tone & Explanation Style in CLAUDE.md
 
-You can tell Claude exactly how to explain things to you — and it will actually follow it. The most useful thing you can add to any CLAUDE.md is a plain-language instruction about how you want concepts broken down.
+You can tell Claude exactly how to talk to you — and it will actually follow it. This is genuinely one of the most underrated things you can put in a CLAUDE.md.
 
 ### The line that actually works
 
 ```markdown
 ## How to explain things
-When I ask you to explain a concept, explain it like I'm a complete idiot.
-Short sentences. Real analogies. No textbook language.
+Please explain questions like I'm a fucking idiot. Short sentences,
+real analogies, zero textbook language. It really helps ngl.
 ```
 
-This one line changes how Claude answers every question in that project. Instead of:
+That's it. One paragraph. Claude will follow it every single session without you having to ask.
 
-> "The Poynting vector represents the directional energy flux density of an electromagnetic field, defined as the cross product of the electric and magnetic field vectors..."
+**Before** (default Claude, unprompted):
 
-You get:
+> "The Poynting vector represents the directional energy flux density of an electromagnetic field, formally defined as **S** = **E** × **H**, where the cross product yields a vector orthogonal to both field components indicating the direction of power flow per unit area..."
 
-> "It's basically which direction the wave is carrying energy and how much per square meter. Point your fingers along E, curl them toward H — your thumb points where the power goes."
+**After** (with the line above in CLAUDE.md):
 
-### More tone options to put in CLAUDE.md
+> "It's basically a GPS arrow for where the energy is going and how much of it. Cross E and H with your right hand — your thumb points where the power flows. Units are watts per square meter, so it's power through a window."
 
-Pick the one that matches how your brain works:
+Same Claude. One line in a file. Completely different experience.
+
+### Why it works so well
+
+Claude's default voice is trained to sound like a textbook because that's "correct." But correct is not the same as useful when you're trying to actually understand something at 11pm before an exam. Telling it explicitly to drop the formality gives it permission to just talk to you like a person.
+
+The vulgar framing works especially well because it signals clearly: do not hedge, do not define terms I didn't ask about, do not start with the general case. Just answer the question.
+
+### More variations that work
 
 ```markdown
-## Explanation style: ELI5
-Explain everything like I'm new to this topic. Start with the physical intuition
-before any math. Use one concrete example before showing the formula.
+## Explanation style options (pick what fits you)
 
-## Explanation style: step-by-step only
-Never explain the theory unless I ask. When I give you a problem, 
-just walk me through the steps to solve it. Number each step.
+# Option 1 — the classic
+Explain things like I'm an idiot. Seriously. Short, blunt, real examples.
+Skip the formal definitions unless I ask.
 
-## Explanation style: compare to something I know
-I'm a circuits person. When explaining EM concepts, relate them back 
-to voltage, current, resistance, and impedance whenever possible.
+# Option 2 — for problem-solving mode
+When I give you a problem, just walk me through the steps. Numbered.
+No theory unless I ask "why". I just need to get through this HW.
 
-## Explanation style: bottom line first
-Give me the answer or the key takeaway in the first sentence.
-Explanation after. I'll ask if I want more detail.
+# Option 3 — for circuits people learning EM
+I know circuits cold. When explaining EM concepts, map them to 
+voltage/current/impedance/RC first. Then do the field theory version.
+
+# Option 4 — answer first, explain second
+Lead with the answer or the punchline. Explanation after.
+I'll ask "why" if I want it. Don't bury the answer in a paragraph.
 ```
 
-### Stack them for different situations
+### Stack them so you can switch on the fly
 
 ```markdown
 ## Explanations
-- Default: plain english, short sentences, intuition before math
-- If I say "formal": give the textbook definition
-- If I say "just the steps": numbered steps only, skip all explanation
-- If I say "ELI5": pretend I've never seen this topic before
+- Default: short, blunt, idiot-proof. Real examples before formulas.
+- If I say "formal": textbook definition, full precision
+- If I say "steps": numbered steps only, no explanation at all
+- If I say "why": explain the physical intuition behind the last thing you said
 ```
 
-Now you can switch modes mid-session just by saying "formal" or "ELI5" without re-explaining your preferences every time.
+Now you can just say "why" or "formal" mid-session and Claude knows exactly what gear to shift into. No re-explaining your preferences every conversation.
 
-### Why this matters more than you think
-
-Claude defaults to a textbook voice — complete, precise, and utterly useless for actually learning something fast. A single line in CLAUDE.md flips that for every session in that project. You write it once and never have to say "can you explain that more simply" again.
-
-If you're using Claude for coursework, pair it with your lecture summaries:
+### For coursework CLAUDE.md
 
 ```markdown
-## Course style note
-I'm an EE student. Strong on circuits and math, weaker on field theory intuition.
-When explaining EM: circuits analogies first, field theory second.
-When I ask "what does X mean physically" — give me the gut-check version, not the definition.
+## How to talk to me
+Explain things like I'm completely new to this, even if I'm not.
+Intuition first, math second. If I ask "what does X mean physically" —
+give me the gut-check version, not the Wikipedia definition.
+I'm an EE student so circuits analogies hit different.
 ```
+
+This + detailed lecture summaries in the same CLAUDE.md = Claude that actually helps you understand the material instead of just restating it fancier.
 
 ---
 
